@@ -1,3 +1,4 @@
+"Batch size","Num LSTM layers","Length of input sequences","Hidden size of each LSTM layer","Average time (s)"
 1,1,128,100,0.000917042
 2,1,128,100,0.00108962
 4,1,128,100,0.00114748

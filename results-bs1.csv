@@ -1,5 +1,4 @@
-"Num LSTM layers","Length of input sequences","Hidden size of each LSTM layer","Total time
-1k runs (s)","Average time (s)"
+"Num LSTM layers","Length of input sequences","Hidden size of each LSTM layer","Total time 1k runs (s)","Average time (s)"
 1,128,64,0.746012,0.000746012
 4,128,256,5.77095,0.00577095
 3,64,64,1.08874,0.00108874
