@@ -21,3 +21,16 @@ changes.
 
 
 ## Batch size > 1 observations:
+- we can pack a decent batch size on the A100 while the runtime only grows slowly and linearly. It would be cool to measure SM occupancy to show when that trend breaks down (e.g. hidden size=400, 300, 256, 200 at batch size=256)
+- the runtime grows much more quickly the number of layers and input sequence length, which makes sense since those dimensions cannot fully be parallelized. But we can get very accurate models using only 2 LSTM layers and a reasonable input sequence length. 
+-  there is a definite sweet spot for batch size=2 to 4
+-  for the batch_size=1 case in the larger LSTMs— if they are truly slower than the batch_size=2 case, then it would make sense to simply duplicate the input along the batch size just to get a faster runtime. But this could theoretically / should be done under the hood in the TensorRT engine creation, so I am suspicious. 
+
+
+As expected, the distribution of inference times is multimodal— narrowly peaked around the median runtime, with some significant clusters of much longer inference times. 
+
+The boxplots are so highly compressed around the interquartile range that you can’t make out the boxes and whiskers, but up to ~10% of the samples are outliers (I have manually annotated the number of outliers out of the 1000 trials). The outliers are highly clustered around a couple of runtimes, e.g. 1.25x and 2x median runtime— if we dug into them a little bit, we could probably explain these factors with CUDA kernel scheduling behaviors. 
+
+This is probably similar to how real-time operating systems characterize the latencies of non-RT OS system latencies. 
+> Usually, we take a draconian but simplistic approach: Max time rules. Ignore min, ignore average.
+> Sometimes, we throw out the first couple times if we can guarantee they can be done outside of the time of interest.
